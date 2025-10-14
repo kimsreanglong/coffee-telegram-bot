@@ -75,7 +75,18 @@ public class MyController {
 	
 	@PostMapping("/success")
 	public String success(@ModelAttribute Booked booked) {
+		bookedRepo.save(booked);
 
+	      String message = String.format(
+	          "📅 New Booking!\n" +
+	          "👤 Name: %s\n📞 Phone: %s\n📧 Email: %s\n" +
+	          "📆 Date: %s\n🕒 Time: %s\n👥 People: %s",
+	          booked.getName(), booked.getPhoneNumber(), booked.getEmail(),
+	          booked.getDate(), booked.getTime(), booked.getPerson()
+	      );
+	      bot.message(message);
+	      return "success";
+	  }
 
 		
 
