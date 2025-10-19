@@ -1,4 +1,3 @@
-
 # Use OpenJDK 21 as base image
 FROM eclipse-temurin:21-jdk-alpine
 
@@ -12,4 +11,4 @@ COPY build/libs/coffee-shop-telegram-bot-0.0.1-SNAPSHOT.war .
 EXPOSE 8080
 
 # Run the Spring Boot application
-CMD ["sh", "-c", "java -Dserver.port=$PORT -war coffee-shop-telegram-bot-0.0.1-SNAPSHOT.war"]
+CMD ["java", "-jar", "coffee-shop-telegram-bot-0.0.1-SNAPSHOT.war"]
