@@ -1,12 +1,14 @@
-# Stage 1: Build using Gradle
-FROM gradle:7.6-jdk21-alpine AS builder
-WORKDIR /app
-COPY . .
-RUN gradle clean bootJar --no-daemon
-
-# Stage 2: Run the app
+# Use Java 21 JDK image
 FROM eclipse-temurin:21-jdk-alpine
+
+# Set work directory inside container
 WORKDIR /app
-COPY --from=builder /app/build/libs/coffee-shop-telegram-bot-0.0.1-SNAPSHOT.jar app.jar
+
+# Copy WAR file into container
+COPY build/libs/coffee-shop-telegram-bot-0.0.1-SNAPSHOT.war app.war
+
+# Expose port your app runs on
 EXPOSE 8080
-CMD ["java", "-jar", "app.jar"]
+
+# Run the WAR file
+ENTRYPOINT ["java","-jar","app.war"]
