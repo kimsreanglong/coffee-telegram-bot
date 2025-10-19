@@ -1,14 +1,15 @@
-# Use Java 21 JDK image
+
+# Use OpenJDK 21 as base image
 FROM eclipse-temurin:21-jdk-alpine
 
-# Set work directory inside container
+# Set working directory in container
 WORKDIR /app
 
-# Copy WAR file into container
-COPY build/libs/coffee-shop-telegram-bot-0.0.1-SNAPSHOT.war app.war
+# Copy Gradle build output
+COPY build/libs/coffee-shop-telegram-bot-0.0.1-SNAPSHOT.war .
 
-# Expose port your app runs on
+# Expose the port Spring Boot runs on
 EXPOSE 8080
 
-# Run the WAR file
-ENTRYPOINT ["java","-jar","app.war"]
+# Run the Spring Boot application
+CMD ["sh", "-c", "java -Dserver.port=$PORT -war coffee-shop-telegram-bot-0.0.1-SNAPSHOT.war"]
