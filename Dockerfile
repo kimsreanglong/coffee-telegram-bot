@@ -1,15 +1,16 @@
-
-# Use OpenJDK 21 as base image
-FROM eclipse-temurin:21-jdk-alpine
-
-# Set working directory in container
+# ---------- Stage 1: Build the WAR ----------
+FROM gradle:8.7-jdk21-alpine AS builder
 WORKDIR /app
+COPY . .
+RUN gradle clean build -x test
 
-# Copy Gradle build output
-COPY build/libs/coffee-shop-telegram-bot-0.0.1-SNAPSHOT.war .
+# ---------- Stage 2: Run the WAR ----------
+FROM eclipse-temurin:21-jdk-alpine
+WORKDIR /app
+COPY --from=builder /app/build/libs/*.war app.war
 
-# Expose the port Spring Boot runs on
+# Expose default port
 EXPOSE 8080
 
-# Run the Spring Boot application
-CMD ["sh", "-c", "java -Dserver.port=$PORT -war coffee-shop-telegram-bot-0.0.1-SNAPSHOT.war"]
+# Run the Spring Boot app
+CMD ["sh", "-c", "java -Dserver.port=${PORT:-8080} -jar app.war"]
